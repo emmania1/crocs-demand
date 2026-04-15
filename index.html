@@ -286,7 +286,7 @@
     <a class="nav-btn" href="#s7">Full Table</a>
   </nav>
   <button class="summary-btn" onclick="openSummary()">📋 Generate Summary</button>
-  <div class="meta">Updated 2026-04-15 13:16</div>
+  <div class="meta">Updated 2026-04-15 13:22</div>
 </div>
 
 
@@ -314,7 +314,7 @@
     <h3>Data sources feeding this dashboard</h3>
     <ul class="summary-list"><li>Reddit — 3-year archive, 963 user posts across 5 subreddits</li><li>News — 1,768 articles from 451 distinct publishers, topic-classified</li><li>CROX — 772 daily closes, 3-year window</li><li>Drop Effects — 160 past drops with demand-lift + stock-return analysis</li></ul>
 
-    <div class="summary-footer">Generated 2026-04-15 13:16 from live data in <code>/Users/emmania/Desktop/crocs_demand/data/</code>. Numbers above are computed, not interpreted — full methodology is in each section's source caption.</div>
+    <div class="summary-footer">Generated 2026-04-15 13:22 from live data in <code>/Users/emmania/Desktop/crocs_demand/data/</code>. Numbers above are computed, not interpreted — full methodology is in each section's source caption.</div>
   </div>
 </div>
 
@@ -410,112 +410,175 @@
 <section>
   <div class="stat-row">
     <div class="stat-card" style="border-left:3px solid #06A550">
-      <div class="stat-val">0</div>
-      <div class="stat-lbl">Upcoming (next 30d)</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid #06A550">
-      <div class="stat-val">25</div>
-      <div class="stat-lbl">Articles (trailing 30d)</div>
+      <div class="stat-val">15</div>
+      <div class="stat-lbl">Drops covered (last 30d)</div>
     </div>
     <div class="stat-card" style="border-left:3px solid #F58025">
       <div class="stat-val">0</div>
-      <div class="stat-lbl">All upcoming (any horizon)</div>
+      <div class="stat-lbl">Forward-dated upcoming</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid #06A550">
+      <div class="stat-val">25</div>
+      <div class="stat-lbl">All articles (trailing 30d)</div>
     </div>
   </div>
 
   <div class="info-box">
-    <span class="info-lbl">About the sources</span>
-    Upcoming drops come from two places:
-    <strong>"manual"</strong> rows are curated by hand in <code>config/crocs_releases.csv</code> (e.g., drops surfaced from expert-network calls or industry chatter before they hit the press);
-    <strong>"news"</strong> rows are auto-extracted from Google News articles whose text mentions a future release date.
-    Recent coverage is the last 90 days of Google News results classified by topic (release / collab / review / financial / culture).
+    <span class="info-lbl">How this section is built</span>
+    <strong>Left column "Recent drops":</strong> release- and collab-topic news articles from the last 30 days, plus any confirmed future-dated drops (from your <code>config/crocs_releases.csv</code> manual log or news articles that explicitly mention a future release date). These are actual drop events.<br><br>
+    <strong>Right column "All news coverage":</strong> every article about Crocs/HeyDude from the last 90 days regardless of topic — gives you the full media picture (reviews, culture, financial, not just drops).
   </div>
 
   <div class="dual-col">
     <div>
-      <h4 class="mini-title">Upcoming drops</h4>
-      <div class="placeholder">No forward-dated drops currently in the news corpus — publishers typically cover drops at release (not weeks ahead), so this list fills up when:<br>(1) a sneaker blog previews a drop with a specific future date in the headline, or<br>(2) you append a row to <code>config/crocs_releases.csv</code> with info-edge drops from expert calls / industry chatter.<br>Check the Recent Coverage table on the right for the last 90 days of drop activity.</div>
+      <h4 class="mini-title">Recent drops (last 30 days) + confirmed upcoming</h4>
+      <div class="table-card"><table>
+            <thead><tr><th class="num">Date</th><th>Brand</th><th>Drop / Title</th><th>Type</th></tr></thead>
+            <tbody><tr>
+            <td class="num">2026-04-14</td>
+            <td>HeyDude</td>
+            <td><a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxOOGN6UFVFLVEzOTVQS3JUN3puWlpSdE9hX3NLNDJMczVwVHF4UWl4YUVlVDZRUTRjMjJ3R0xQQWhjN253S3h6QndFUnR6ZzFoZ3lBWXExN1BzWWdoYTVLUXAzOHRFQURFbTdWdjJlRFg1aE5haVZONlNOZ01CMGZoS0t5LXNDUFIyXzJkclRNWXFSQWloalhNck9XY252aFJtREZ2dlJUX1F3ZldQZWw0TnFOSHhUR3dTaE81NGJMNjg4ZUJaNDBzYmcxcVdVUQ?oc=5" target="_blank">Hey Dude releases limited-edition Minecraft shoes, blending comfort and nostalgi</a></td>
+            <td><span class="topic-chip" style="background:#06A55022;color:#06A550;border:1px solid #06A55055">Release / Drop</span></td>
+        </tr><tr>
+            <td class="num">2026-04-14</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE9LWXpCc2RCV1BGQldjQ1dHcF9WemRjdmp4ZEhqV015U0kzZEtoS1lfdVBYWDVWZHhzMjM5RnhqSTlCQ2tVTzJwUHpvZ2IzT19FdHV3enc4VmczeUZ5NGkyYnRVZTl6VGFvSmlId0k1dXhVVHBpcXY2MlpFN1MwWXM?oc=5" target="_blank">Crocs releases new NFL team designs: How to buy - The Big Lead</a></td>
+            <td><span class="topic-chip" style="background:#06A55022;color:#06A550;border:1px solid #06A55055">Release / Drop</span></td>
+        </tr><tr>
+            <td class="num">2026-04-14</td>
+            <td>HeyDude</td>
+            <td><a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxQZWtxdnhoUlRzM2RtVjVrUlhIZGJ3Q2ktU2dsck9RZEs1LVA2aEh6Y1FQMGNRQi1EZk9jcmIyLTB2Nm9XRW4yWUxWYXJiUy14S0ZDRkd3c0NTUGVfdkNST0htVFl1bHBVbEhqei1SdEVvOGRqZkVUY0RRdHEtSmxBdE13TDhhZExnckV2WU8yN0tHZTF1dk91S29vYVdYNjBuTU5tNlpUMGtFTlZ2RVBLRlRscnRON0E?oc=5" target="_blank">HeyDude x Minecraft slip-on shoes just dropped, shop now - USA Today</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-14</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMi7gFBVV95cUxPV3NPSkN3V2pmMVNkMVVKa3N4MDJNWFRCWWlOTktiVTZkeXF1bWhNd0UwUUhmbUd6Wm4zdFhaT3dOZ1l6c1FDVi1aanFPQ080YVZ3cll1dFdQcEJ0bmVreFNvVGd3SlBpbnd2QV8yN0JKV0RHc2VpVmhEeVVhcnpnY0pNTVZJVE0wclFZandlcGZ2UVZEYm4yVUk5aHlpVm5uSk1WYVNRZnFIUWdkRy1BT04tdnRGS1djWVlCR24xTlhNUDBnT1hQdjFtcXJUSGtXdGZIaC13bWF6THpmd1BFUHFWeGtHY3lpYmdLR1J3?oc=5" target="_blank">Crocs x NFL clogs: New team styles just dropped for 2026 - USA Today</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-14</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxOUFRzSlJFSktTdk9zSVh3STRQbk82LVBxTmxscFhGeklyS0gzVWI1LXhhS3VJSE5jMnV6UWlFRGJXdlAtWXJyazdLUi1VZVN3U0JnbjZmVTVJMHZHVmVHX2V1SWJ0UDR1bkZaMVB6YzZnTHE0Y1JfRmw0eTdicVFLR1VDTTIwNk1OdG52OVA5UHBmdVpXMnRCdlUydzBUQTFOTWVFWGtMb0tUOW9YNVVkLTh0azQ?oc=5" target="_blank">Crocs X Lego Brings Creative Footwear Collection to India - Indian Retailer</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-13</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxOaWkzendxSWdYc0tVY2txMDNCRHFiVGFSRVVqV1MtTV9DamVTSmIxVzY0Q3gzYkJGQkJraTBLQ1RfUFlRZ2lGOTJTa3FCY1VwTU02TTNHTFp5UnBxQ0V1Mmhsd08zTlJLRGNDSlNGdjRXZUthblV3aGZ5QnpxUXp0dkMtLV9TY2dZZDg4Q0tkek5oY2RHU280NQ?oc=5" target="_blank">Crocs and Lego launch new collaborative collection in India - Indian Television</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-13</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5RRXZtM085UHByZHoyYmYwUWlUNGs5WDJGN3M0VlM1OXFiT1ltNTZ3LWJZSEZEcjdHbnU1U1paV2hnZVF1dXdocEp0b01lUU1rNUVmZkRDVk1lV2ppZXdfOXZjMHlqUQ?oc=5" target="_blank">Crocs Launches Crocs X LEGO Collection In India With Digital-first Drop - IFAB M</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-13</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMiY0FVX3lxTE5UV0NFNkIyYmJUSER2NUM1Skx1cTlndWJlZXY1T1hBejNicEZURFJVV2JaR1FxaXVBdWYyQWhpa1haTjhkWFRwLXVXeHdyUDJHXzNmM3Qza1BtUl8wT2pHdjNxbw?oc=5" target="_blank">Crocs Latest ‘Crush Boot’ is Just an Affordable Balenciaga Alternative - Man of </a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-10</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMibkFVX3lxTE1sUTV4cGlGUW8tcDZBMjdfSXdUcmdITTR3OFUxMTlQWVpTY3FaMG1lU3MwVVFTdW1EX1pPc3QwSEMyeTU2Ums3WXBMUmtmLTZFZzhpOExSY050cnVrNFdpa0E2Q0NvSmNUSEhpX3Fn?oc=5" target="_blank">Steven Smith Unveils Crocs The Roy With TEDxPortland - Sneaker Bar Detroit</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-10</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMidkFVX3lxTE4tMkZEZTdrYThHQ3lWVjBWcHZqenJGckw5b3VfRHF2YU1Oa1VyYS1Va1FvaXJYQTJiUmFrZ1hObVl3VmdnM1QyV0dyekY5R0Iwb2tPcjMzZktCZjgxUndaYlJSZE9sbHRmT0d1OXdxcDh2LTF3UlHSAXZBVV95cUxOLTJGRGU3a2E4R0N5VlYwVnB2anpyRnJMOW91X0RxdmFNTmtVcmEtVWtRb2lyWEEyYlJha2dYTm1Zd1ZnZzNUMldHcnpGOUdCMG9rT3IzM2ZLQmY4MVJ3WmJSUmRPbGx0Zk9HdTl3cXA4di0xd1JR?oc=5" target="_blank">Steven Smith Takes The Stage With A New Crocs Model For TEDxPortland - Sneaker N</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-04-08</td>
+            <td>HeyDude</td>
+            <td><a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxPTDRTZnktUWVCVFpDNWdxOUhZV2ZTcmNnS1EwV0hLLTBMQk5weWdJOXlycFFZYUFnVVlzZmtUOVI2WnNmeXVBYUFlcGlDTHdnXzVXU3VVbmpkUmhxdDBBUnluczA0N0xMV1ZTaXNnS1VDcUkzRVJRNUg2YXZoYXdHQmx5Qk5Wd2pGbnRGRmpqTGZCNFFha0JRSGNXaVQzMEtjcVFsZmQ4aktReWtGZWEtY2lnQkdvakhobVEwckxn0gHSAUFVX3lxTE5XYU9QZnEtZ3VhaEttNjY2a2JSckEtNEZ4RDZPNU9nUHpzdnNKcE12c3N6dGhfMUZpTHdzMzhIcjJRdGVNZkhCVThiVXNQRHhRLVRCeXJranduYmhOaVlGc0psNndTc2xNNFl1cDZPTi1Qa2lud1pvc09xbHQ5TzItbXg0Sk9nR1ktLVk0bnQxd083bGMwNUtLSnYtallRQTc2X2xaSXVDbU0zWU9GYTRRWFQ4Nmhka2dRUVcwUWRZaGdORHktX0UxTTRPUlVBYVp0dw?oc=5" target="_blank">Hey Dude releases limited-edition 2026 Masters Tournament golf shoes - MassLive</a></td>
+            <td><span class="topic-chip" style="background:#06A55022;color:#06A550;border:1px solid #06A55055">Release / Drop</span></td>
+        </tr><tr>
+            <td class="num">2026-04-05</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMiygFBVV95cUxQcHo0QkxDR2pmcU1FeGpLbk5WTjFKQXhhYkEtWTVISG5HTldKSTNjMndZWFd3dUpfTWVvS0pKMkIyRFI3ZjR1UUp3RzdHYnJUaFBfeTZrMERTYnhrTWdaMjFBNmo0VHFqbXF1RnZGZmJIOFVQUXZLSjdrWENwQnp1dHdETDFzVEpiVFdqa1lrbldUTkEtcnRSWVV1MUU4S0pXX3YyR0RCUWU1QWtHSW5VeGJwaHdKTnU5QjhtMlhSYnlydU9SUXFaLV930gHPAUFVX3lxTE5BUjBmRkFtOXlRUEdJOXBlN2kwZlAzV3BlS1F1aUMwVzJOSGZhRDB0RFBXZVdlWngyRWV0S2pOTExwcjAtOThuUVNaa3Mxam1hQkQ0NkxBT3dLQ01LME9yRkJJQVpoVGdubjFST3RucXFzRVIxWmlJY2JVaGJBRUgxWms4NDYwdlBnM1YzQUNEblh0bkJ2NVFEWXp0SzZEVG5hcUh4OElWbnFyZDNPcUlJRURfOVlFQVRCTWN0aXB0NFdkTzYxaC1USHNNZWI4cw?oc=5" target="_blank">Figs (FIGS) Valuation Check As Crocs Partnership Giveaway Puts Healthcare Brand </a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-03-31</td>
+            <td>HeyDude</td>
+            <td><a href="https://news.google.com/rss/articles/CBMizwFBVV95cUxQcHQ3aHc2UmM0OVZOdThYRlNuNUJOS3lNeFFmVzR6c0w0NXpHcmY0VFlqWWJHTTZ1Y19DN3ZtM2VnNmZzQ2FObFoxTjd1ZENabFh2YUhreEtuRzNWamVVbzMwV1NzRGVVU09BRzl3RnZ4RWprSTNhRG9ld1J1RXpEc01YLUxwTDhHS3A3MEpwbXFEOHFQVDQ1SC1qYXpYa0hqVVlkYXR3QVdFYmk1NmQ3Y1ZYSjczUDRHY19HQ01sX0UwcHItQW9VQWdTeW9zcEXSAeMBQVVfeXFMTnAtOXE2M0l0VmRTZWFjRC00UXhTSVhPaHRYem5HRkNnYnVXQk1iU0huSm05X1EyS2RJTjFidEowaGJadkhQWWg1Yjk5RXYwb2JJd216bW45UmlmTXF5YW9UbTVMZHVzMTUtU0FLazJzX3gwZlJJbWwzR1hrakNFRXRTZndDOVg4RTU0Mlo5N2I4dUpTeTU1T2hrVjNqaWVzMWF0QUgzVUZjcmU4UHZCNFFoWG8zLTMtc3ZJQk94cElQck5IdDhIWlVLNS1qNElpTkZoMm56bVFLaFdXTzRFVnZ6RUU?oc=5" target="_blank">Hey Dude drops new golf shoes, including limited-edition Masters Tournament styl</a></td>
+            <td><span class="topic-chip" style="background:#06A55022;color:#06A550;border:1px solid #06A55055">Release / Drop</span></td>
+        </tr><tr>
+            <td class="num">2026-03-30</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE0wS2xWa2R1YU1ocGZPNmUzeTFFeFdlcEx4TTRlbEZHLUlLLU1tMG90Y09kWkJwV3RIMVZoM2JRQmZlVzNEeTZaMkx4b3dNZF9nbzIySzR6cjFvS1NkQVc1dHJNQXE?oc=5" target="_blank">norma kamali CROCS X BALENCIAGA BOOT TO KNEE Store | Clothing - Agorà Notizia</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr><tr>
+            <td class="num">2026-03-30</td>
+            <td>Crocs</td>
+            <td><a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxQMVdBdWJoYlpYUjJkcHMwSHZFcWdpTWV4THF2OE1nYkdTRXhVdVdmTzlhSTY5dXEyaWxYa1YxYTJwdE5tX01PbG1UNHF4OWktYm1VTDNDSzVZdzVyWHdwOGwzVndoSy13dDZBeDdhcW01c21iLWFwRW9yVWhHUHlLTDNOQkNKNlVUZ3k5YW1lMWluem4wQ3FmLWZ3ZFlhQnNsRWc0eDlfZFF1Q201SXlGTGRZdk85OFBBTkFEd1l5OC1hVkU1b3NxUUJxZXl5QdIB4gFBVV95cUxOMFpyOERFYmEtSjBaeTdKZ2QtelJ6bWRXSGdkWHhVQmJWZXVvdXFiX20xQnNMQUVpLWN0RmtER3ViaWgtMFBBek80bVdOdlIxT1BLTU55ekZFakVvc2ZaUTVoQnBDVnh3YlA4MnBLVC1haU5jRjM5d09SZTNKbFM3bG5QZkJFa0ZCOUFlcEFWNm9qWFRLSEhDWFJHbVRUSV9oWmMwd0Z3bWdyeW5RNUVOZGhPTGIzZUdTYTJSSWpYZ2xkZjM4VXNOT0N2SXNJa09jdmJiU0JyZUFIeXJtWV9uTm13?oc=5" target="_blank">Crocs is finally having a sale on the Pokémon Classic Clog during Spring Savings</a></td>
+            <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
+        </tr></tbody></table></div>
     </div>
     <div>
-      <h4 class="mini-title">Recent news coverage</h4>
+      <h4 class="mini-title">All news coverage (last 90 days, all topics)</h4>
       <div class="table-card"><table>
-            <thead><tr><th class="num">Date</th><th>Brand</th><th>Headline</th><th>Topic</th><th>Publisher</th></tr></thead>
+            <thead><tr><th class="num">Date</th><th>Brand</th><th>Headline</th><th>Topic</th></tr></thead>
             <tbody><tr>
                 <td class="num">2026-04-15</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxNbEc1Tm40dDVpNzRieG84amI0cDJBRWZLVmEyUFM4QzFGZE9QSlo4LXQ0SExnMlhzbVpnR2xjYmxEZkE1bWtweXlFUkNQZmNEaDRGSS1VSDBXQUhnNnRJLUtJeWdxYXpWVjJZWENUZ1Y2YWEyS0tMQ18zcWw5LWx0OQ?oc=5" target="_blank">Crocs Expanded Its Disney Collection With $35 Customizable Minnie Ears — Plus Snag Initial</a></td>
                 <td><span class="topic-chip" style="background:#6e778122;color:#6e7781;border:1px solid #6e778155">Other</span></td>
-                <td class="muted-cell">SheKnows</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>HeyDude</td>
                 <td><a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxOOGN6UFVFLVEzOTVQS3JUN3puWlpSdE9hX3NLNDJMczVwVHF4UWl4YUVlVDZRUTRjMjJ3R0xQQWhjN253S3h6QndFUnR6ZzFoZ3lBWXExN1BzWWdoYTVLUXAzOHRFQURFbTdWdjJlRFg1aE5haVZONlNOZ01CMGZoS0t5LXNDUFIyXzJkclRNWXFSQWloalhNck9XY252aFJtREZ2dlJUX1F3ZldQZWw0TnFOSHhUR3dTaE81NGJMNjg4ZUJaNDBzYmcxcVdVUQ?oc=5" target="_blank">Hey Dude releases limited-edition Minecraft shoes, blending comfort and nostalgia - MassLi</a></td>
                 <td><span class="topic-chip" style="background:#06A55022;color:#06A550;border:1px solid #06A55055">Release / Drop</span></td>
-                <td class="muted-cell">MassLive</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE9LWXpCc2RCV1BGQldjQ1dHcF9WemRjdmp4ZEhqV015U0kzZEtoS1lfdVBYWDVWZHhzMjM5RnhqSTlCQ2tVTzJwUHpvZ2IzT19FdHV3enc4VmczeUZ5NGkyYnRVZTl6VGFvSmlId0k1dXhVVHBpcXY2MlpFN1MwWXM?oc=5" target="_blank">Crocs releases new NFL team designs: How to buy - The Big Lead</a></td>
                 <td><span class="topic-chip" style="background:#06A55022;color:#06A550;border:1px solid #06A55055">Release / Drop</span></td>
-                <td class="muted-cell">The Big Lead</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>HeyDude</td>
                 <td><a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxQZWtxdnhoUlRzM2RtVjVrUlhIZGJ3Q2ktU2dsck9RZEs1LVA2aEh6Y1FQMGNRQi1EZk9jcmIyLTB2Nm9XRW4yWUxWYXJiUy14S0ZDRkd3c0NTUGVfdkNST0htVFl1bHBVbEhqei1SdEVvOGRqZkVUY0RRdHEtSmxBdE13TDhhZExnckV2WU8yN0tHZTF1dk91S29vYVdYNjBuTU5tNlpUMGtFTlZ2RVBLRlRscnRON0E?oc=5" target="_blank">HeyDude x Minecraft slip-on shoes just dropped, shop now - USA Today</a></td>
                 <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
-                <td class="muted-cell">USA Today</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxPWngzT0I5ckdNZEdmeVdMcDd1d0hSQUJoRU1IM0hGdmxVQ1BvakxTVnlZVF9IbXZMM2ppdHMyLTdNUHBvZ3JkbG93ZzZYeVZsQWV1WjJ3Z2J3czF0LXdiTDJPRVg0dFZOdUVNbHNqVXlSQVpuX1RkOTd4Ujk5dXdRM0NiMFNCcGFSMWxvY2FMVE1OVThLZDJrMGtrdUdpVEc4R3BxaXk4LXFRVTl5UEJQZVlTZ004dWEtcDBaRVJqMjd4NW9TOUtod9IB3AFBVV95cUxOZHZaNXdUelA3WVlxQkx4MFdDeTN0X3pNRWFwNlZobHNkajREcFJ4T0ktX2FSQk9CckhaUkEyN194RHdaVEZTQ0xXS0hFTDB1bktSdGVaU0gyZWF2RXdTWWRWSjE2a1ZCRG5SRVZvOEExcXE0ZXk1Y2FoVkZKZEFrcEJuMEUyODRLRDg5LVFqaGd6dHF3RVZxQkFYQjBvWXM1QTRwMkxVWlJ3dHJuVG9jeWxKdUttRm9sNEJaVk05MVh1UkFidjRuVlFqMThkOTNpSTRjSUpQZF9QUHN2?oc=5" target="_blank">Crocs just changed the park-day accessory game with new customizable Disney headbands - ML</a></td>
                 <td><span class="topic-chip" style="background:#6e778122;color:#6e7781;border:1px solid #6e778155">Other</span></td>
-                <td class="muted-cell">MLive.com</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxQZU9nTVkyVXYyZF9Ja1Vidm5oMV96ZWZmcFNoYm9uRVVMNUlHeVRlRVRudmR4UEJCbmQ0NmltZWg3eFJhTzhFVXFZd0U0TWZwU19JWnZSVzBiWnlEc2hFUHpkV3FUNTBWbDlzaW53YUtLS0dSRi0zS1FWNjBNLVNtZThjeVdfX1NmcUl4b3ZpRFJMRmdmNkl2V1kzam9ZSG1nUDMxVHVvdUtoRm4wdUxQMXJUd3FhWG5P0gHMAUFVX3lxTE9hOS1DUGhIbmZwWDhTRGN2QlFLQlpYX0VyNDNuQ0dyMFk0TjdlRjZiRl9kb3NieVVQZzluRGJfWTVNOVBhOFBvVVJ4aWFScHZDMUVLZ25QYkZ0cUctWlBWQXQ1QjNIdGtObTZDemtRVkMwQ09aMGlwbHpKeGRNMk1hSWY5czlUcG16aF9CbmVJVXlacTlfMnVYSmtZS19OYThxTjlJQmZkVncxbFFIRndjcDh4Ym9lNF9ocUdCb0VWUlc1R2R0QzMxaHQ4Vw?oc=5" target="_blank">Browns fans, Crocs has a new NFL clog designed just for the Dawg Pound - Cleveland.com</a></td>
                 <td><span class="topic-chip" style="background:#6e778122;color:#6e7781;border:1px solid #6e778155">Other</span></td>
-                <td class="muted-cell">Cleveland.com</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMi7gFBVV95cUxPV3NPSkN3V2pmMVNkMVVKa3N4MDJNWFRCWWlOTktiVTZkeXF1bWhNd0UwUUhmbUd6Wm4zdFhaT3dOZ1l6c1FDVi1aanFPQ080YVZ3cll1dFdQcEJ0bmVreFNvVGd3SlBpbnd2QV8yN0JKV0RHc2VpVmhEeVVhcnpnY0pNTVZJVE0wclFZandlcGZ2UVZEYm4yVUk5aHlpVm5uSk1WYVNRZnFIUWdkRy1BT04tdnRGS1djWVlCR24xTlhNUDBnT1hQdjFtcXJUSGtXdGZIaC13bWF6THpmd1BFUHFWeGtHY3lpYmdLR1J3?oc=5" target="_blank">Crocs x NFL clogs: New team styles just dropped for 2026 - USA Today</a></td>
                 <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
-                <td class="muted-cell">USA Today</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMiwwFBVV95cUxPYUJjUDhDRUFGR3Z5eGlHMzJfMkZoZktvcUM1YktJc1Q2LW5jSzdRWVpTVW5oS0IzVXNrbnBtMHRfTHVROVg4N2EybHB1QmRHdWY0eWRPTjZrWkNrVW1ENUxSWldNR2NWOEtGWVFVU0NBYXBWcFJ0YjgteDVkUVpwT1VBcXY4TmRyTl9CQWltU090WVk1b0lMMVAwSVhYbEt2TnVsQ3ozVVQ3R0lVZU1NYkllVnYtVzJ6RXNINHk3Nk1yVEHSAdcBQVVfeXFMT2ZVSk9Qc25QQUs3aHQ0TGRydllfbnRUbzlkbVI1SWZsRXJLZVZaRFRXTHNHZUNHVHJMMXkxZ0xYY0Rsakt3VFdsckxPcDFTWl9FdzVkeFJrZTBkSmQ1SjJwR0RIc1B1dnRFZjZ1Tlcxb1hNWnhVLXB2UXVPNTRNaFd4MzZzRmNLQ2NsaS1mbzU5YzdlcU1xc2xNdW1jdldwRU96ZFdOM0ZhQ1c2bDdQM21Jbm9pa1pIOGhkOWh0MHhvXy1CTVNNRmsxTkt3SHUzWUUzckx0YU0?oc=5" target="_blank">Football fans are going wild over these new NFL Crocs now available from Fanatics - MLive.</a></td>
                 <td><span class="topic-chip" style="background:#6e778122;color:#6e7781;border:1px solid #6e778155">Other</span></td>
-                <td class="muted-cell">MLive.com</td>
             </tr><tr>
                 <td class="num">2026-04-14</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxOUFRzSlJFSktTdk9zSVh3STRQbk82LVBxTmxscFhGeklyS0gzVWI1LXhhS3VJSE5jMnV6UWlFRGJXdlAtWXJyazdLUi1VZVN3U0JnbjZmVTVJMHZHVmVHX2V1SWJ0UDR1bkZaMVB6YzZnTHE0Y1JfRmw0eTdicVFLR1VDTTIwNk1OdG52OVA5UHBmdVpXMnRCdlUydzBUQTFOTWVFWGtMb0tUOW9YNVVkLTh0azQ?oc=5" target="_blank">Crocs X Lego Brings Creative Footwear Collection to India - Indian Retailer</a></td>
                 <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
-                <td class="muted-cell">Indian Retailer</td>
             </tr><tr>
                 <td class="num">2026-04-13</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxOaWkzendxSWdYc0tVY2txMDNCRHFiVGFSRVVqV1MtTV9DamVTSmIxVzY0Q3gzYkJGQkJraTBLQ1RfUFlRZ2lGOTJTa3FCY1VwTU02TTNHTFp5UnBxQ0V1Mmhsd08zTlJLRGNDSlNGdjRXZUthblV3aGZ5QnpxUXp0dkMtLV9TY2dZZDg4Q0tkek5oY2RHU280NQ?oc=5" target="_blank">Crocs and Lego launch new collaborative collection in India - Indian Television</a></td>
                 <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
-                <td class="muted-cell">Indian Television</td>
             </tr><tr>
                 <td class="num">2026-04-13</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMizwFBVV95cUxNazFIcFdGN3JBLVNRUTdKOFZGSWRvSXViZjhwa3ZnaG5mcUNqRThiUkktZ0Ftd1BNR1o4MDhzRExjUWRIOTlpVHFFbVNLYlI5c0xwVEVCVjJ2ME5RNm04WVZxUUdSQmtkeGJiM3FOdk1iX01uMS1Qc29QeEVMUVl1Zmc5Q0QwdXI4d2VRMFVhV1duNVBraVRJaU12dkM5WndxNDBkQm1vMzZvaWtZVDBkZ1plYl9UQzZ5Z3l5RlNjYjVrUFNrcHNaeldRSFFGdFnSAc8BQVVfeXFMTWsxSHBXRjdyQS1TUVE3SjhWRklkb0l1YmY4cGt2Z2huZnFDakU4YlJJLWdBbXdQTUdaODA4c0RMY1FkSDk5aVRxRW1TS2JSOXNMcFRFQlYydjBOUTZtOFlWcVFHUkJrZHhiYjNxTnZNYl9NbjEtUHNvUHhFTFFZdWZnOUNEMHVyOHdlUTBVYVdXbjVQa2lUSWlNdnZDOVp3cTQwZEJtbzM2b2lrWVQwZGdaZWJfVEM2eWd5eUZTY2I1a1BTa3BzWnpXUUhRRnRZ?oc=5" target="_blank">UNO, LEGO, ONLY and Crocs turn nostalgia into wearable fashion in India - bestmediainfo.co</a></td>
                 <td><span class="topic-chip" style="background:#6e778122;color:#6e7781;border:1px solid #6e778155">Other</span></td>
-                <td class="muted-cell">bestmediainfo.com</td>
             </tr><tr>
                 <td class="num">2026-04-13</td>
                 <td>Crocs</td>
                 <td><a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5RRXZtM085UHByZHoyYmYwUWlUNGs5WDJGN3M0VlM1OXFiT1ltNTZ3LWJZSEZEcjdHbnU1U1paV2hnZVF1dXdocEp0b01lUU1rNUVmZkRDVk1lV2ppZXdfOXZjMHlqUQ?oc=5" target="_blank">Crocs Launches Crocs X LEGO Collection In India With Digital-first Drop - IFAB MEDIA</a></td>
                 <td><span class="topic-chip" style="background:#F5802522;color:#F58025;border:1px solid #F5802555">Collab</span></td>
-                <td class="muted-cell">IFAB MEDIA</td>
             </tr></tbody></table></div>
     </div>
   </div>
-  <div class="takeaway">0 confirmed drops in the next 30 days · 25 articles covered drops in the trailing 30. 0 upcoming entries come from the manual log.</div>
+  <div class="takeaway"><strong>15</strong> drops in the last 30 days (plus any confirmed future-dated entries). <strong>12</strong> total articles in the trailing 90 days across all topics. Manual log currently has <strong>0</strong> upcoming entries — append to <code>config/crocs_releases.csv</code> to surface info-edge drops before public coverage.</div>
 </section>
 
 <div class="section-header" id="s5">
@@ -1191,7 +1254,7 @@
 </div>
 
 <footer>
-  Crocs Demand Dashboard · generated 2026-04-15 13:16
+  Crocs Demand Dashboard · generated 2026-04-15 13:22
 </footer>
 </div>
 

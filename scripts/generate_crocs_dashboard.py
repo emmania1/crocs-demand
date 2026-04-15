@@ -194,6 +194,31 @@ def compute_release_radar(d: dict) -> dict:
                 "link":           r.get("link", ""),
             })
 
+    # Recent drops (last 30 days) — release/collab topic articles from the news
+    # corpus. These are the real "drops" that just landed. Useful to show in
+    # left column of Drop Calendar alongside upcoming.
+    recent_drops = []
+    if not d["news_raw"].empty:
+        s = d["news_raw"].copy()
+        s["published"] = pd.to_datetime(s["published"], errors="coerce")
+        if s["published"].dt.tz is not None:
+            s["published"] = s["published"].dt.tz_localize(None)
+        s["topic"] = s["title"].apply(classify_topic)
+        cut30 = pd.Timestamp(datetime.now() - timedelta(days=30))
+        s = s[(s["published"] >= cut30) & (s["topic"].isin(["release", "collab"]))]
+        s = s.sort_values("published", ascending=False)
+        # Dedupe by title to avoid 5 articles covering the same drop
+        s = s.drop_duplicates(subset=["title"], keep="first").head(20)
+        for _, r in s.iterrows():
+            recent_drops.append({
+                "date":       r["published"].strftime("%Y-%m-%d") if pd.notna(r["published"]) else "",
+                "brand":      r.get("brand", "Crocs"),
+                "title":      str(r.get("title", ""))[:80],
+                "topic":      r.get("topic", "release"),
+                "publisher":  r.get("publisher") or "Unknown",
+                "link":       r.get("link", ""),
+            })
+
     up_df = pd.DataFrame(upcoming)
     if not up_df.empty:
         up_df = up_df.sort_values("release_date")
@@ -252,10 +277,12 @@ def compute_release_radar(d: dict) -> dict:
     return {
         "upcoming":           up_df.to_dict(orient="records") if not up_df.empty else [],
         "recent":             recent,
+        "recent_drops":       recent_drops,
         "cadence":            cadence,
         "publishers":         publishers,
         "upcoming_count_30d": upc_30d,
         "recent_count_30d":   recent_30d,
+        "recent_drops_count": len(recent_drops),
         "total_upcoming":     len(up_df) if not up_df.empty else 0,
         "topic_totals":       topic_totals,
         "topic_by_sil":       topic_by_sil,
@@ -1130,93 +1157,108 @@ def render_heat(growth: dict, volume: dict, findings: dict = None) -> str:
 
 
 def render_releases(radar: dict) -> str:
-    upcoming = radar["upcoming"][:15]
-    recent = radar["recent"][:12]
+    upcoming     = radar["upcoming"][:15]
+    recent_drops = radar.get("recent_drops", [])[:15]   # release/collab articles in last 30d
+    recent_news  = radar["recent"][:12]                  # broader 90d coverage
 
-    if upcoming:
-        up_body = ""
-        for r in upcoming:
-            src = r.get("source", "")
-            src_badge = f'<span class="badge badge-{"pos" if src == "manual" else "na"}">{src}</span>'
-            link = r.get("link", "")
-            name = r.get("display_name", "")
-            name_html = f'<a href="{link}" target="_blank">{name}</a>' if link else name
-            up_body += f"""<tr>
-                <td class="num">{r.get('release_date') or '—'}</td>
-                <td>{r.get('brand') or '—'}</td>
-                <td>{name_html}</td>
-                <td>{src_badge}</td>
-                <td class="muted-cell">{r.get('source_detail', '')}</td>
-            </tr>"""
-        up_html = f"""<div class="table-card"><table>
-            <thead><tr><th class="num">Date</th><th>Brand</th><th>Title / Silhouette</th><th>Source</th><th>Publisher</th></tr></thead>
-            <tbody>{up_body}</tbody></table></div>"""
+    # --- LEFT COLUMN: confirmed upcoming + recent drops (actual drop events) ---
+    drops_table_html = ""
+    # Build unified rows: upcoming first (future-dated), then recent drops
+    rows_html = ""
+    for r in upcoming:
+        src = r.get("source", "")
+        src_badge = f'<span class="badge badge-{"pos" if src == "manual" else "na"}">{src}</span>'
+        link = r.get("link", "")
+        name = r.get("display_name", "")
+        name_html = f'<a href="{link}" target="_blank">{name}</a>' if link else name
+        rows_html += f"""<tr>
+            <td class="num">{r.get('release_date') or '—'}</td>
+            <td>{r.get('brand') or '—'}</td>
+            <td>{name_html}</td>
+            <td>{src_badge}</td>
+        </tr>"""
+    for r in recent_drops:
+        link = r.get("link", "")
+        title = r.get("title", "")
+        title_html = f'<a href="{link}" target="_blank">{title}</a>' if link else title
+        topic = r.get("topic", "release")
+        topic_color = TOPIC_COLORS.get(topic, "#6e7781")
+        topic_badge = f'<span class="topic-chip" style="background:{topic_color}22;color:{topic_color};border:1px solid {topic_color}55">{TOPIC_LABELS.get(topic, topic)}</span>'
+        rows_html += f"""<tr>
+            <td class="num">{r.get('date') or '—'}</td>
+            <td>{r.get('brand') or '—'}</td>
+            <td>{title_html}</td>
+            <td>{topic_badge}</td>
+        </tr>"""
+
+    if rows_html:
+        drops_table_html = f"""<div class="table-card"><table>
+            <thead><tr><th class="num">Date</th><th>Brand</th><th>Drop / Title</th><th>Type</th></tr></thead>
+            <tbody>{rows_html}</tbody></table></div>"""
     else:
-        up_html = ('<div class="placeholder">No forward-dated drops currently in the news corpus — publishers typically '
-                   'cover drops at release (not weeks ahead), so this list fills up when:<br>'
-                   '(1) a sneaker blog previews a drop with a specific future date in the headline, or<br>'
-                   '(2) you append a row to <code>config/crocs_releases.csv</code> with info-edge drops from expert calls / industry chatter.<br>'
-                   'Check the Recent Coverage table on the right for the last 90 days of drop activity.</div>')
+        drops_table_html = '<div class="placeholder">No drops in the last 30 days.</div>'
 
-    if recent:
-        rec_body = ""
-        for r in recent:
+    # --- RIGHT COLUMN: broader news (all topics, last 90d) ---
+    if recent_news:
+        news_body = ""
+        for r in recent_news:
             link = r.get("link", "")
             title = r.get("title", "")
             title_html = f'<a href="{link}" target="_blank">{title}</a>' if link else title
             topic = r.get("topic", "other")
-            topic_chip = f'<span class="topic-chip" style="background:{TOPIC_COLORS.get(topic,"#6e7781")}22;color:{TOPIC_COLORS.get(topic,"#6e7781")};border:1px solid {TOPIC_COLORS.get(topic,"#6e7781")}55">{TOPIC_LABELS.get(topic, topic)}</span>'
-            rec_body += f"""<tr>
+            topic_color = TOPIC_COLORS.get(topic, "#6e7781")
+            topic_chip = f'<span class="topic-chip" style="background:{topic_color}22;color:{topic_color};border:1px solid {topic_color}55">{TOPIC_LABELS.get(topic, topic)}</span>'
+            news_body += f"""<tr>
                 <td class="num">{r.get('date') or '—'}</td>
                 <td>{r.get('brand') or '—'}</td>
                 <td>{title_html}</td>
                 <td>{topic_chip}</td>
-                <td class="muted-cell">{r.get('publisher', '')}</td>
             </tr>"""
-        rec_html = f"""<div class="table-card"><table>
-            <thead><tr><th class="num">Date</th><th>Brand</th><th>Headline</th><th>Topic</th><th>Publisher</th></tr></thead>
-            <tbody>{rec_body}</tbody></table></div>"""
+        news_html = f"""<div class="table-card"><table>
+            <thead><tr><th class="num">Date</th><th>Brand</th><th>Headline</th><th>Topic</th></tr></thead>
+            <tbody>{news_body}</tbody></table></div>"""
     else:
-        rec_html = '<div class="placeholder">No recent coverage loaded.</div>'
+        news_html = '<div class="placeholder">No recent news.</div>'
 
-    manual_count = sum(1 for r in radar["upcoming"] if r.get("source") == "manual")
-    takeaway = (f"{radar['upcoming_count_30d']} confirmed drops in the next 30 days · "
-                f"{radar['recent_count_30d']} articles covered drops in the trailing 30. "
-                f"{manual_count} upcoming entries come from the manual log.")
+    # Stat cards
+    upcoming_manual = sum(1 for r in upcoming if r.get("source") == "manual")
+    total_drops_in_window = len(upcoming) + len(recent_drops)
+
+    takeaway = (f"<strong>{total_drops_in_window}</strong> drops in the last 30 days (plus any confirmed future-dated entries). "
+                f"<strong>{len(recent_news)}</strong> total articles in the trailing 90 days across all topics. "
+                f"Manual log currently has <strong>{upcoming_manual}</strong> upcoming entries — append to <code>config/crocs_releases.csv</code> to surface info-edge drops before public coverage.")
 
     return f"""
 <section>
   <div class="stat-row">
     <div class="stat-card" style="border-left:3px solid {BRAND_ACCENT}">
-      <div class="stat-val">{radar['upcoming_count_30d']}</div>
-      <div class="stat-lbl">Upcoming (next 30d)</div>
+      <div class="stat-val">{len(recent_drops)}</div>
+      <div class="stat-lbl">Drops covered (last 30d)</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid {BRAND_ACCENT2}">
+      <div class="stat-val">{len(upcoming)}</div>
+      <div class="stat-lbl">Forward-dated upcoming</div>
     </div>
     <div class="stat-card" style="border-left:3px solid {BRAND_ACCENT}">
       <div class="stat-val">{radar['recent_count_30d']}</div>
-      <div class="stat-lbl">Articles (trailing 30d)</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid {BRAND_ACCENT2}">
-      <div class="stat-val">{radar['total_upcoming']}</div>
-      <div class="stat-lbl">All upcoming (any horizon)</div>
+      <div class="stat-lbl">All articles (trailing 30d)</div>
     </div>
   </div>
 
   <div class="info-box">
-    <span class="info-lbl">About the sources</span>
-    Upcoming drops come from two places:
-    <strong>"manual"</strong> rows are curated by hand in <code>config/crocs_releases.csv</code> (e.g., drops surfaced from expert-network calls or industry chatter before they hit the press);
-    <strong>"news"</strong> rows are auto-extracted from Google News articles whose text mentions a future release date.
-    Recent coverage is the last 90 days of Google News results classified by topic (release / collab / review / financial / culture).
+    <span class="info-lbl">How this section is built</span>
+    <strong>Left column "Recent drops":</strong> release- and collab-topic news articles from the last 30 days, plus any confirmed future-dated drops (from your <code>config/crocs_releases.csv</code> manual log or news articles that explicitly mention a future release date). These are actual drop events.<br><br>
+    <strong>Right column "All news coverage":</strong> every article about Crocs/HeyDude from the last 90 days regardless of topic — gives you the full media picture (reviews, culture, financial, not just drops).
   </div>
 
   <div class="dual-col">
     <div>
-      <h4 class="mini-title">Upcoming drops</h4>
-      {up_html}
+      <h4 class="mini-title">Recent drops (last 30 days) + confirmed upcoming</h4>
+      {drops_table_html}
     </div>
     <div>
-      <h4 class="mini-title">Recent news coverage</h4>
-      {rec_html}
+      <h4 class="mini-title">All news coverage (last 90 days, all topics)</h4>
+      {news_html}
     </div>
   </div>
   <div class="takeaway">{takeaway}</div>
