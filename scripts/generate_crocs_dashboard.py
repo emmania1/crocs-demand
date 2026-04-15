@@ -174,7 +174,16 @@ def compute_release_radar(d: dict) -> dict:
             })
 
     if not d["news_upcoming"].empty:
-        for _, r in d["news_upcoming"].iterrows():
+        # Filter out stale entries — articles published in a past year that
+        # reference "May 20" shouldn't be rendered as upcoming on May 20 of the
+        # current year. Heuristic: article must be published within last 60 days.
+        nu = d["news_upcoming"].copy()
+        nu["published_dt"] = pd.to_datetime(nu["published"], errors="coerce")
+        if nu["published_dt"].dt.tz is not None:
+            nu["published_dt"] = nu["published_dt"].dt.tz_localize(None)
+        cutoff = pd.Timestamp(datetime.now() - timedelta(days=60))
+        nu = nu[nu["published_dt"] >= cutoff]
+        for _, r in nu.iterrows():
             upcoming.append({
                 "release_date":   str(r.get("extracted_release_date", "")),
                 "brand":          r.get("brand", "Crocs"),
@@ -1143,7 +1152,11 @@ def render_releases(radar: dict) -> str:
             <thead><tr><th class="num">Date</th><th>Brand</th><th>Title / Silhouette</th><th>Source</th><th>Publisher</th></tr></thead>
             <tbody>{up_body}</tbody></table></div>"""
     else:
-        up_html = '<div class="placeholder">No upcoming drops surfaced yet.</div>'
+        up_html = ('<div class="placeholder">No forward-dated drops currently in the news corpus — publishers typically '
+                   'cover drops at release (not weeks ahead), so this list fills up when:<br>'
+                   '(1) a sneaker blog previews a drop with a specific future date in the headline, or<br>'
+                   '(2) you append a row to <code>config/crocs_releases.csv</code> with info-edge drops from expert calls / industry chatter.<br>'
+                   'Check the Recent Coverage table on the right for the last 90 days of drop activity.</div>')
 
     if recent:
         rec_body = ""

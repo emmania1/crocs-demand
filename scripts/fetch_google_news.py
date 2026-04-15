@@ -80,7 +80,15 @@ def match_silhouettes(text: str, silhouettes: pd.DataFrame) -> list:
     return hits
 
 
-def extract_release_date(text: str) -> str | None:
+def extract_release_date(text: str, pub_year: int = None) -> str | None:
+    """
+    Extract a release date from article text. When no year is explicitly
+    mentioned in the text, default to the article's PUBLISH year (if known),
+    not the current year — otherwise articles from 2023/2024 that say
+    'releases on May 20' get parsed as May 20, 2026 which is wrong and makes
+    stale articles show up in the Drop Calendar as upcoming.
+    """
+    default_year = pub_year if pub_year else datetime.now().year
     for pat in DATE_PATTERNS:
         m = re.search(pat, text, flags=re.IGNORECASE)
         if m:
@@ -89,8 +97,12 @@ def extract_release_date(text: str) -> str | None:
                 try:
                     dt = datetime.strptime(raw, fmt)
                     if dt.year == 1900:
-                        dt = dt.replace(year=datetime.now().year)
-                        if dt < datetime.now():
+                        dt = dt.replace(year=default_year)
+                        # Only bump to next year if we're using the CURRENT year
+                        # as default and the date is already past — this avoids
+                        # treating "May 20" in a 2024 article as 2024-05-20 (correct)
+                        # while keeping "May 20" in a 2026 article as 2027-05-20 (upcoming)
+                        if pub_year is None and dt < datetime.now():
                             dt = dt.replace(year=dt.year + 1)
                     return dt.strftime("%Y-%m-%d")
                 except ValueError:
@@ -128,7 +140,7 @@ def run_query(label: str, query: str, silhouettes: pd.DataFrame) -> list:
         publisher = extract_publisher(e)
         full_text = f"{title} {summary}"
         hits = match_silhouettes(full_text, silhouettes)
-        rel_date = extract_release_date(full_text)
+        rel_date = extract_release_date(full_text, pub_year=pub_dt.year if pub_dt else None)
         brand = "HeyDude" if "heydude" in full_text.lower() or "hey dude" in full_text.lower() else "Crocs"
         rows.append({
             "query_label":          label,
